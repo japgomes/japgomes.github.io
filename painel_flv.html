@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="300">
+<title>Leadtime – FLV</title>
+<style>
+:root{--head:#1B7F3D;--ac:#249B4C;--dk:#125A2A;--lt:#A7DBB8;--tint:#EAF6EE;--tx:#14213D;--mu:#5B6B88;--ln:#D6DDE8;--sf:#FFFFFF}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:var(--tint);color:var(--tx);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+.app{height:100%;display:flex;flex-direction:column;gap:1.6vh;padding:0 0 1.6vh}
+.hd{background:var(--head);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:2vw;padding:1.3vh 2.4vw}
+.hd .t{display:flex;align-items:baseline;gap:1.6vw}
+.hd h1{font-size:4.8vh;font-weight:800;letter-spacing:.02em;line-height:1}
+.hd p{font-size:2.1vh;opacity:.9}
+.hd .meta{text-align:right;font-size:2vh;line-height:1.3}
+.hd .meta b{font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:1.2vw;padding:0 2.4vw}
+.kpi{background:var(--sf);border:1px solid var(--ln);border-top:.8vh solid var(--lt);border-radius:1.2vh;padding:1.2vh 1.2vw 1.1vh;display:grid;grid-template-columns:auto 1fr;column-gap:.7vw;align-items:baseline}
+.kpi.geral{border:2px solid var(--head);border-top:.8vh solid var(--lt);background:var(--head);box-shadow:0 .5vh 1.2vh rgba(27,127,61,.2)}
+.kpi.geral span,.kpi.geral b,.kpi.geral small{color:#fff}
+.kpi.geral b{font-size:6.2vh}
+.kpi span{grid-column:1/3;font-size:2.1vh;font-weight:600;color:var(--mu)}
+.kpi b{font-size:5.6vh;font-weight:800;line-height:1.1;color:var(--dk);font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi small{font-size:2vh;color:var(--mu)}
+.main{flex:1;min-height:0;display:grid;grid-template-columns:63fr 37fr;gap:1.2vw;padding:0 2.4vw}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:1.2vh;padding:1.4vh 1.4vw;display:flex;flex-direction:column;min-height:0}
+.card h2,.hh h2{font-size:2.5vh;font-weight:800;color:var(--dk)}
+.cols,.row{display:grid;grid-template-columns:28% 1fr 20%;gap:1.2vw;align-items:center}
+.cols{font-size:2.1vh;font-weight:700;padding:.9vh 0 .8vh;border-bottom:2px solid var(--ln);margin-top:.6vh}
+.cols .v{color:var(--ac)}.cols .l{color:var(--dk);text-align:right}
+.rows{flex:1;min-height:0;display:flex;flex-direction:column}
+.row{flex:1;min-height:0;border-bottom:1px solid var(--ln)}
+.row:last-child{border-bottom:0}
+.name{font-size:2.3vh;font-weight:600;line-height:1.1}
+.name.ph{color:var(--mu);font-weight:400}
+.bar{display:flex;align-items:center;gap:.8vw;height:100%}
+.track{flex:0 0 62%;height:56%;max-height:4.6vh;background:var(--tint);border-radius:.6vh;overflow:hidden}
+.track i{display:block;height:100%;border-radius:.6vh;transition:width .6s}
+.bar.v i{background:var(--ac)}.bar.l i{background:var(--dk)}
+.bar em{font-style:normal;font-size:2.4vh;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lt-value{text-align:right;padding-right:.8vw;font-size:2.4vh;font-weight:800;color:var(--dk);font-variant-numeric:tabular-nums;white-space:nowrap}
+.donut{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4vh}
+.ring{position:relative;height:25vh;aspect-ratio:1}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .ct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ct b{font-size:3.8vh;font-weight:800;color:var(--dk);font-variant-numeric:tabular-nums}
+.ct span{font-size:1.9vh;color:var(--mu);max-width:52%;line-height:1.15}
+.leg{width:100%;display:flex;flex-direction:column;gap:.7vh}
+.li{display:flex;align-items:center;gap:.9vw;font-size:2.3vh;font-weight:600}
+.li u{width:2.2vh;height:2.2vh;border-radius:.5vh;flex:none}
+.li em{font-style:normal;margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums}
+/* histórico */
+.hist{flex:none;height:26vh;margin:0 2.4vw;background:var(--sf);border:1px solid var(--ln);border-radius:1.2vh;padding:1.1vh 1.4vw 1vh;display:flex;flex-direction:column;min-height:0}
+.hh{display:flex;justify-content:space-between;align-items:baseline;gap:2vw}
+.hh h2 small{font-size:1.9vh;font-weight:600;color:var(--mu)}
+.lg{display:flex;gap:1.6vw;font-size:2vh;color:var(--mu);font-weight:600}
+.lg u{display:inline-block;width:1.9vh;height:1.9vh;border-radius:.4vh;margin-right:.5vw;vertical-align:-.25vh}
+.lg .i{background:var(--dk)}.lg .t{background:var(--ac)}
+.gr{flex:1;min-height:0;display:flex}
+.grp{display:flex;flex-direction:column;min-width:0;padding:0 .4vw;border-left:1px solid var(--ln)}
+.grp.atual{background:var(--tint);border:2px solid var(--head);border-radius:.8vh;padding:.3vh .4vw}
+.grp.atual .cap{color:var(--head);font-weight:800}
+.grp:first-child{border-left:0;padding-left:0}.grp:last-child{padding-right:0}
+.cs{flex:1;min-height:0;display:flex}
+.col{flex:1;min-width:0;display:flex;flex-direction:column}
+.pp{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-top:2.6vh;border-bottom:2px solid var(--ln)}
+.stack{width:56%;position:relative;display:flex;flex-direction:column}
+.stack div{min-height:.3vh}
+.sT{background:var(--ac);border-radius:.5vh .5vh 0 0}
+.sI{background:var(--dk)}
+.sT,.sI{position:relative;display:flex;align-items:center;justify-content:center;overflow:visible}
+.seg-label{font-size:clamp(8px,1.1vh,12px);line-height:1;font-weight:700;color:#fff;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.45)}
+.stack.ph .sT,.stack.ph .sI{opacity:.25}
+.tot{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);padding-bottom:.3vh;font-size:2vh;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.al{text-align:center;font-size:1.8vh;font-weight:600;color:var(--mu);padding-top:.4vh;white-space:nowrap}
+.col.hoje .al{color:var(--dk);font-weight:800}
+.cap{text-align:center;font-size:1.6vh;color:var(--mu);padding-top:.1vh}
+@media (prefers-reduced-motion:reduce){.track i{transition:none}}
+</style>
+</head>
+<body>
+<div class="app" data-painel="flv">
+  <div class="hd">
+    <div class="t"><h1>FLV</h1><p>Lead time e volume · Frutas, legumes e verduras</p></div>
+    <div class="meta">Período: <b id="periodo">—</b> · Atualizado em <b id="atualizado">—</b></div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><span>Volume geral</span><b id="k-volume">—</b><small>caixas</small></div>
+    <div class="kpi"><span>Peso bruto</span><b id="k-peso">—</b><small>kg</small></div>
+    <div class="kpi"><span>Lead time transporte</span><b id="k-lt_transporte">—</b><small>dias</small></div>
+    <div class="kpi"><span>Lead time interno</span><b id="k-lt_interno">—</b><small>dias</small></div>
+    <div class="kpi geral"><span>Lead time geral</span><b id="k-lt_geral">—</b><small>dias</small></div>
+  </div>
+  <div class="main">
+    <div class="card">
+      <h2>Volume e lead time por categoria</h2>
+      <div class="cols"><div>Categoria</div><div class="v">Volume (caixas)</div><div class="l">Lead time (dias)</div></div>
+      <div class="rows" id="rows"></div>
+    </div>
+    <div class="card">
+      <h2>Origem do abastecimento</h2>
+      <div class="donut">
+        <div class="ring"><svg viewBox="0 0 200 200" id="svg"></svg><div class="ct"><b id="ct-pct">—</b><span id="ct-nome"></span></div></div>
+        <div class="leg" id="leg"></div>
+      </div>
+    </div>
+  </div>
+  <div class="hist">
+    <div class="hh">
+      <h2>Histórico de lead time<small id="hh-demo"></small></h2>
+      <div class="lg"><span><u class="i"></u>Interno</span><span><u class="t"></u>Transporte</span><span>Total acima da barra</span></div>
+    </div>
+    <div class="gr" id="gr"></div>
+  </div>
+</div>
+<script src="dados_flv.js"></script>
+<script>
+/* ===== HISTÓRICO DE LEAD TIME: PREENCHER À MÃO (este é o único trecho a editar) =====
+   Cada linha: "chave": [interno, transporte]. Aceita número (1.45) ou texto pt-BR ("1,45").
+   meses:   chave = "01" a "12" (mês já fechado)
+   semanas: chave = data da SEGUNDA-FEIRA da semana, "AAAA-MM-DD" (semanas fechadas do mês atual)
+   dias:    chave = "AAAA-MM-DD" (dias da semana atual)
+   O painel monta sozinho: meses fechados, semanas do mês atual e dias da semana atual.
+   Exemplo:  semanas: { "2026-11-02": [1.40, 1.50] },  dias: { "2026-11-16": [1.45, 1.52] } */
+var HISTORICO = {
+  meses:   { "01":null, "02":null, "03":null, "04":null, "05":null, "06":null, "07":null, "08":null, "09":null, "10":null, "11":null, "12":null },
+  semanas: { },
+  dias:    { }
+};
+</script>
+<script>
+(function(){
+var D = window.DADOS || {};
+var DEMO = {"atualizado": "18/11/2026", "periodo": "16 a 17/11", "kpis": {"volume": 19849, "peso": 242839, "lt_transporte": 0.66, "lt_interno": 0.63, "lt_geral": 1.29}, "categorias": [{"nome": "Frutas", "volume": 9590, "leadtime": 1.26}, {"nome": "Legumes", "volume": 7940, "leadtime": 1.1}, {"nome": "Granjeiros", "volume": 1300, "leadtime": 1.16}, {"nome": "Armazém", "volume": 1010, "leadtime": 0.95}, {"nome": "Verduras", "volume": 10, "leadtime": 3.72}], "origem": [{"nome": "Divisão manual", "pct": 71.7}, {"nome": "Cross-docking", "pct": 28.3}]};
+var demo = /[?&]demo/.test(location.search);
+if (demo) D = DEMO;
+var COR = ["#249B4C","#125A2A","#A7DBB8"];
+var NS = "http://www.w3.org/2000/svg";
+function num(v){
+  if (typeof v === "number") return isFinite(v) ? v : null;
+  if (typeof v !== "string" || !v.trim()) return null;
+  var s = v.trim().toLowerCase(), m = 1;
+  if (/k$/.test(s)) { m = 1000; s = s.slice(0,-1); }
+  s = s.replace(/\./g,"").replace(",",".");
+  var x = parseFloat(s); return isNaN(x) ? null : x*m;
+}
+function fmt(v,d){ return v==null ? "—" : v.toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function txt(id,t){ document.getElementById(id).textContent = t; }
+function el(tag,cls,t){ var e=document.createElement(tag); if(cls) e.className=cls; if(t!=null) e.textContent=t; return e; }
+
+txt("periodo", D.periodo || "—");
+txt("atualizado", D.atualizado || "—");
+var K = D.kpis || {};
+txt("k-volume", fmt(num(K.volume),0));
+txt("k-peso", fmt(num(K.peso),0));
+txt("k-lt_transporte", fmt(num(K.lt_transporte),2));
+txt("k-lt_interno", fmt(num(K.lt_interno),2));
+txt("k-lt_geral", fmt(num(K.lt_geral),2));
+
+var cats = (D.categorias || []).map(function(c){ return {n:c.nome||"", v:num(c.volume), l:num(c.leadtime)}; });
+var vazio = !cats.length;
+if (vazio) cats = [1,2,3,4,5].map(function(){ return {n:"Categoria", v:null, l:null, ph:true}; });
+else if (cats.some(function(c){return c.v!=null})) cats.sort(function(a,b){ return (b.v||0)-(a.v||0); });
+var mv = Math.max.apply(null, cats.map(function(c){return c.v||0})) || 1;
+var rows = document.getElementById("rows");
+cats.forEach(function(c){
+  var r = el("div","row"); r.appendChild(el("div","name"+(c.ph?" ph":""),c.n));
+  var b = el("div","bar v"), t = el("div","track"), i = document.createElement("i");
+  i.style.width = c.v==null ? "0%" : Math.max(c.v/mv*100,1.5)+"%";
+  t.appendChild(i); b.appendChild(t); b.appendChild(el("em",null,fmt(c.v,0))); r.appendChild(b);
+  r.appendChild(el("div","lt-value",fmt(c.l,2)));
+  rows.appendChild(r);
+});
+
+var org = D.origem || [];
+if (!org.length) org = [{nome:"Cross-docking"},{nome:"Divisão manual"},{nome:"Mindset"}];
+var vals = org.map(function(o){ return num(o.pct); });
+var tot = vals.reduce(function(s,x){ return s + (x||0); },0);
+var svg = document.getElementById("svg"), R = 70, C = 2*Math.PI*R, acc = 0;
+function circ(color,len,off){
+  var c = document.createElementNS(NS,"circle");
+  c.setAttribute("cx",100); c.setAttribute("cy",100); c.setAttribute("r",R); c.setAttribute("fill","none");
+  c.setAttribute("stroke",color); c.setAttribute("stroke-width",30);
+  c.setAttribute("stroke-dasharray", len+" "+(C-len)); c.setAttribute("stroke-dashoffset",-off);
+  svg.appendChild(c);
+}
+circ("#E3E8F0", C, 0);
+if (tot > 0) vals.forEach(function(x,i){
+  if (!x) return; var len = x/tot*C; circ(COR[i%3], Math.max(len-1.2,0.5), acc); acc += len;
+});
+var leg = document.getElementById("leg");
+org.forEach(function(o,i){
+  var li = el("div","li"), u = el("u"); u.style.background = COR[i%3];
+  li.appendChild(u); li.appendChild(el("span",null,o.nome||"")); li.appendChild(el("em",null, vals[i]==null ? "—" : fmt(vals[i],1)+"%"));
+  leg.appendChild(li);
+});
+if (tot > 0) {
+  var top = 0; vals.forEach(function(x,i){ if ((x||0) > (vals[top]||0)) top = i; });
+  txt("ct-pct", fmt(vals[top],1)+"%"); txt("ct-nome", org[top].nome||"");
+}
+
+/* ---- histórico: meses fechados | semanas do mês atual | dias da semana atual ---- */
+var H = D.historico || window.HISTORICO || {};
+var MC=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+    ML=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"],
+    DS=["Seg","Ter","Qua","Qui","Sex","Sáb"];
+function p2(n){ return (n<10?"0":"")+n; }
+function iso(d){ return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate()); }
+function dm(d){ return p2(d.getDate())+"/"+p2(d.getMonth()+1); }
+function add(d,n){ return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n); }
+function par(v){ if(!v||typeof v!=="object") return null; var i=num(v[0]), t=num(v[1]); return (i==null&&t==null)?null:{i:i||0,t:t||0}; }
+var mh = location.search.match(/hoje=(\d{4})-(\d\d)-(\d\d)/), now = new Date();
+var T = mh ? new Date(+mh[1],+mh[2]-1,+mh[3]) : new Date(now.getFullYear(),now.getMonth(),now.getDate());
+var y = T.getFullYear(), m = T.getMonth(), seg = add(T,-((T.getDay()+6)%7)), G = [];
+var bm = []; for (var k=0;k<m;k++) bm.push({r:MC[k], v:par((H.meses||{})[p2(k+1)])});
+if (bm.length) G.push({cap:"Meses de "+y, b:bm});
+var bs = [], d = new Date(y,m,1); d = add(d,(8-d.getDay())%7);
+while (d < seg && d.getMonth() === m) { bs.push({r:p2(d.getDate())+"–"+dm(add(d,5)), v:par((H.semanas||{})[iso(d)])}); d = add(d,7); }
+if (bs.length) G.push({cap:"Semanas de "+ML[m], b:bs});
+var bd = []; for (var j=0;j<6;j++){ var x = add(seg,j); bd.push({r:DS[j]+" "+p2(x.getDate()), v:par((H.dias||{})[iso(x)]), fut:x>T, hoje:iso(x)===iso(T)}); }
+G.push({cap:"Semana "+dm(seg)+" a "+dm(add(seg,5))+" (dias)", b:bd, atual:true});
+if (demo) {
+  txt("hh-demo"," · exemplo ilustrativo");
+  var bi = num(K.lt_interno)||1, bt = num(K.lt_transporte)||1, n = 0;
+  G.forEach(function(g){ g.b.forEach(function(b){ n++; if (!b.v && !b.fut) { var f = 0.9 + ((n*37)%11)/11*0.2; b.v = {i:bi*f, t:bt*(1.1-(f-0.9))}; } }); });
+}
+var mx = 0; G.forEach(function(g){ g.b.forEach(function(b){ if (b.v) mx = Math.max(mx, b.v.i+b.v.t); }); });
+var gr = document.getElementById("gr");
+G.forEach(function(g){
+  var grp = el("div","grp"+(g.atual?" atual":"")), cs = el("div","cs"); grp.style.flex = g.b.length+" 1 0";
+  g.b.forEach(function(b){
+    var col = el("div","col"+(b.hoje?" hoje":"")), pp = el("div","pp");
+    if (!b.fut) {
+      var st = el("div","stack"+(b.v?"":" ph")), vi = b.v ? b.v.i : 1.5, vt = b.v ? b.v.t : 1, sum = vi+vt;
+      st.style.height = (b.v && mx ? Math.max(sum/mx*100,6) : 45)+"%";
+      var a = el("div","sT"), c = el("div","sI"); a.style.flex = vt+" 1 0"; c.style.flex = vi+" 1 0";
+      if (b.v) { a.appendChild(el("span","seg-label",fmt(vt,2))); c.appendChild(el("span","seg-label",fmt(vi,2))); }
+      st.appendChild(a); st.appendChild(c); st.appendChild(el("span","tot", b.v ? fmt(sum,2) : "—")); pp.appendChild(st);
+    }
+    col.appendChild(pp); col.appendChild(el("div","al",b.r)); cs.appendChild(col);
+  });
+  grp.appendChild(cs); grp.appendChild(el("div","cap",g.cap)); gr.appendChild(grp);
+});
+})();
+</script>
+</body>
+</html>
